@@ -10,7 +10,7 @@ from qtpy.QtWidgets import QWidget, QComboBox, QVBoxLayout
 from matplotlib import pyplot as plt
 from xarray import DataArray
 
-from xicam.core.intents import PlotIntent, ErrorBarIntent, BarIntent, PairPlotIntent
+from xicam.core.intents import PlotIntent, ErrorBarIntent, BarIntent, PairPlotIntent, OverlayIntent, ImageIntent
 from xicam.gui.actions import Action
 from xicam.plugins import manager as plugin_manager
 
@@ -89,9 +89,15 @@ class ImageIntentCanvas(XicamIntentCanvas):
         for key, value in kwargs.items():
             if isinstance(value, DataArray):
                 kwargs[key] = np.asanyarray(value).squeeze()
+        if isinstance(intent, OverlayIntent):
+            overlay_mask = pg.ImageItem()
+            overlay_mask.setImage(np.asarray(intent.image).squeeze(), opacity=0.2)
+            self.canvas_widget.view.addItem(overlay_mask)
+        elif isinstance(intent, ImageIntent):
+            self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), **kwargs)
 
+            # self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), opacity, **kwargs)
         # TODO: add rendering logic for ROI intents
-        self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), **kwargs)
 
     def unrender(self, intent) -> bool:
         ...

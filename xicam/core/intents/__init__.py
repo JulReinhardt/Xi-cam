@@ -38,6 +38,14 @@ class ImageIntent(Intent):
     def canvas_name(self):
         return self._canvas_name or self.name
 
+class OverlayIntent(ImageIntent):
+    canvas = "image_canvas"
+
+    def __init__(self, *args, opacity: float=0.2, **kwargs):
+        super(OverlayIntent, self).__init__(*args, **kwargs)
+        self.opacity = opacity
+
+
 
 class PlotIntent(Intent):
     canvas = "plot_canvas"
@@ -117,3 +125,4 @@ class PairPlotIntent(Intent):
             kwargs["canvas_name"] = kwargs.get("item_name")
         super(PairPlotIntent, self).__init__(name, canvas_name, match_key)
         self.transform_data = transform_data
+
