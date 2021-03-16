@@ -91,11 +91,13 @@ class ImageIntentCanvas(XicamIntentCanvas):
                 kwargs[key] = np.asanyarray(value).squeeze()
         if isinstance(intent, OverlayIntent):
             overlay_mask = pg.ImageItem()
-            # image_array = np.asarray(intent.image).squeeze()
-            # channel = np.zeros(image_array.shape)
-            # rgb = np.stack((image_array*255, channel, channel), axis=2)
-            # overlay_mask.setImage(rgb, opacity=0.2)
-            overlay_mask.setImage(np.asarray(intent.image).squeeze(), opacity=0.5)
+            image_array = np.asarray(intent.image).squeeze()
+            channel = np.zeros(image_array.shape)
+            opacity = np.ones(image_array.shape)*intent.opacity
+            rgb = np.stack((image_array, channel, channel, opacity), axis=2)
+            overlay_mask.setImage(rgb)
+            # overlay_mask.setCompositionMode(QtGui.QPainter.CompositionMode_Overlay)
+            # overlay_mask.setImage(np.asarray(intent.image).squeeze(), opacity=0.5)
             self.canvas_widget.view.addItem(overlay_mask)
         elif isinstance(intent, ImageIntent):
             self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), **kwargs)

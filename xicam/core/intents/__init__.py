@@ -42,7 +42,7 @@ class ImageIntent(Intent):
 class OverlayIntent(ImageIntent):
     canvas = "image_canvas"
 
-    def __init__(self, *args, opacity: float = 0.2, **kwargs):
+    def __init__(self, *args, opacity: float = 0.5, **kwargs):
         super(OverlayIntent, self).__init__(*args, **kwargs)
         self.opacity = opacity
 
