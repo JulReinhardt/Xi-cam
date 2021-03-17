@@ -14,6 +14,7 @@ from xicam.core.intents import PlotIntent, ErrorBarIntent, BarIntent, PairPlotIn
 from xicam.gui.actions import Action
 from xicam.plugins import manager as plugin_manager
 
+
 # IntentCanvas -> SingleIntentCanvas -> ImageIntentCanvas
 #              -> MultipleIntentCanvas -> PlotItentCanvas
 
@@ -91,9 +92,9 @@ class ImageIntentCanvas(XicamIntentCanvas):
                 kwargs[key] = np.asanyarray(value).squeeze()
         if isinstance(intent, OverlayIntent):
             overlay_mask = pg.ImageItem()
-            image_array = np.asarray(intent.image).squeeze()
-            channel = np.zeros(image_array.shape)
-            opacity = np.ones(image_array.shape)*intent.opacity
+            image_array = np.asarray(intent.image).squeeze()*255
+            channel = np.zeros(image_array.shape)*255
+            opacity = np.ones(image_array.shape)*intent.opacity*255
             rgb = np.stack((image_array, channel, channel, opacity), axis=2)
             overlay_mask.setImage(rgb)
             # overlay_mask.setCompositionMode(QtGui.QPainter.CompositionMode_Overlay)
@@ -101,8 +102,6 @@ class ImageIntentCanvas(XicamIntentCanvas):
             self.canvas_widget.view.addItem(overlay_mask)
         elif isinstance(intent, ImageIntent):
             self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), **kwargs)
-
-            # self.canvas_widget.setImage(np.asarray(intent.image).squeeze(), opacity, **kwargs)
         # TODO: add rendering logic for ROI intents
 
     def unrender(self, intent) -> bool:
